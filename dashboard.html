@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุป - บันทึกรายรับรายจ่าย</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ระบบบันทึกรายรับ - รายจ่าย</h1>
+            <p class="description">จัดการการเงินของคุณอย่างมีประสิทธิภาพ</p>
+        </header>
+        
+        <div class="row">
+            <div class="card">
+                <h2>สรุปยอดเงิน</h2>
+                <div class="chart-container">
+                    <canvas id="chart"></canvas>
+                </div>
+                <div class="summary">
+                    <div class="summary-item income">
+                        <div>รายรับทั้งหมด</div>
+                        <div class="summary-value" id="total-income">0.00</div>
+                    </div>
+                    <div class="summary-item expense">
+                        <div>รายจ่ายทั้งหมด</div>
+                        <div class="summary-value" id="total-expense">0.00</div>
+                    </div>
+                    <div class="summary-item balance">
+                        <div>ยอดคงเหลือ</div>
+                        <div class="summary-value" id="total-balance">0.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+        <header>
+            <h1>รายการล่าสุด</h1>
+            <p class="description">จัดการการเงินของคุณอย่างมีประสิทธิภาพ</p>
+        </header>
+        
+        <div class="row">
+            <div class="card">
+                <h2>รายการล่าสุด</h2>
+                <div class="transactions" id="transactions-list">
+                    <!-- รายการจะถูกเพิ่มที่นี่โดย JavaScript -->
+                <script src="transactions.js"></script>
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation-buttons">
+            <a href="add-transaction.html" class="nav-button">
+                <i class="fas fa-plus-circle"></i> เพิ่มรายการ
+            </a>
+            <a href="transactions.html" class="nav-button">
+                <i class="fas fa-list"></i> ดูรายการทั้งหมด
+            </a>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <span id="notification-text"></span>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

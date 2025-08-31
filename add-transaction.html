@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เพิ่มรายการ - บันทึกรายรับรายจ่าย</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>เพิ่มรายการใหม่</h1>
+            <p class="description">จัดการการเงินของคุณอย่างมีประสิทธิภาพ</p>
+        </header>
+        
+        <div class="row">
+            <div class="card">
+                <h2>เพิ่มรายการใหม่</h2>
+                <div class="tabs">
+                    <div class="tab active" data-tab="income">รายรับ</div>
+                    <div class="tab" data-tab="expense">รายจ่าย</div>
+                </div>
+                
+                <form id="income-form" class="form active">
+                    <div class="form-group">
+                        <label for="income-category">ประเภทรายรับ</label>
+                        <select id="income-category">
+                            <option value="เงินเดือน">เงินเดือน</option>
+                            <option value="งานพิเศษ">งานพิเศษ</option>
+                            <option value="อื่นๆ">อื่นๆ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="income-amount">จำนวนเงิน (บาท)</label>
+                        <input type="number" id="income-amount" step="0.01" min="0" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="income-image">รูปภาพ (ไม่จำเป็น)</label>
+                        <input type="url" id="income-image" placeholder="https://..." onchange="previewImage(this, 'income-preview')">
+                        
+                        <div class="upload-area" onclick="document.getElementById('income-file').click()">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>คลิกเพื่ออัปโหลดหรือลากไฟล์มาวางที่นี่</p>
+                            <input type="file" id="income-file" accept="image/*" style="display: none" onchange="handleFileSelect(this, 'income-preview', 'income-image')">
+                        </div>
+                        
+                        <div id="income-preview" class="image-preview">
+                            <img src="" alt="Preview">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="income-note">หมายเหตุ (ไม่จำเป็น)</label>
+                        <textarea id="income-note" rows="2"></textarea>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit">บันทึกรายรับ</button>
+                    </div>
+                </form>
+                
+                <form id="expense-form" class="form">
+                    <div class="form-group">
+                        <label for="expense-category">ประเภทรายจ่าย</label>
+                        <select id="expense-category">
+                            <option value="อาหาร">อาหาร</option>
+                            <option value="น้ำมัน">น้ำมัน</option>
+                            <option value="ขนม">ขนม</option>
+                            <option value="กาแฟ">กาแฟ</option>
+                            <option value="ค่าไฟ">ค่าไฟ</option>
+                            <option value="ค่าน้ำ">ค่าน้ำ</option>
+                            <option value="ค่าเน็ต">ค่าเน็ต</option>
+                            <option value="อื่นๆ">อื่นๆ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="expense-amount">จำนวนเงิน (บาท)</label>
+                        <input type="number" id="expense-amount" step="0.01" min="0" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="expense-image">รูปภาพ (ไม่จำเป็น)</label>
+                        <input type="url" id="expense-image" placeholder="https://..." onchange="previewImage(this, 'expense-preview')">
+                        
+                        <div class="upload-area" onclick="document.getElementById('expense-file').click()">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>คลิกเพื่ออัปโหลดหรือลากไฟล์มาวางที่นี่</p>
+                            <input type="file" id="expense-file" accept="image/*" style="display: none" onchange="handleFileSelect(this, 'expense-preview', 'expense-image')">
+                        </div>
+                        
+                        <div id="expense-preview" class="image-preview">
+                            <img src="" alt="Preview">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="expense-note">หมายเหตุ (ไม่จำเป็น)</label>
+                        <textarea id="expense-note" rows="2"></textarea>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit">บันทึกรายจ่าย</button>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+        
+        <div class="navigation-buttons">
+            <a href="dashboard.html" class="nav-button">
+                <i class="fas fa-chart-pie"></i> กลับไปหน้าสรุป
+            </a>
+            <a href="transactions.html" class="nav-button">
+                <i class="fas fa-list"></i> ดูรายการทั้งหมด
+            </a>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <span id="notification-text">บันทึกข้อมูลเรียบร้อยแล้ว</span>
+    </div>
+
+    <script src="add-transaction.js"></script>
+</body>
+</html>

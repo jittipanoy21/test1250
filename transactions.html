@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายการ - บันทึกรายรับรายจ่าย</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>รายการล่าสุด</h1>
+            <p class="description">จัดการการเงินของคุณอย่างมีประสิทธิภาพ</p>
+        </header>
+        
+        <div class="row">
+            <div class="card">
+                <h2>รายการล่าสุด</h2>
+                <div class="transactions" id="transactions-list">
+                    <!-- รายการจะถูกเพิ่มที่นี่โดย JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation-buttons">
+            <a href="dashboard.html" class="nav-button">
+                <i class="fas fa-chart-pie"></i> กลับไปหน้าสรุป
+            </a>
+            <a href="add-transaction.html" class="nav-button">
+                <i class="fas fa-plus-circle"></i> เพิ่มรายการใหม่
+            </a>
+        </div>
+    </div>
+    
+    <!-- โมดอลยืนยันการลบ -->
+    <div class="modal" id="delete-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">ยืนยันการลบรายการ</h3>
+            <p>คุณแน่ใจว่าต้องการลบรายการนี้หรือไม่? การกระทำนี้ไม่สามารถย้อนกลับได้</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-cancel" onclick="closeModal()">ยกเลิก</button>
+                <button class="modal-btn modal-confirm" onclick="confirmDelete()">ลบรายการ</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <span id="notification-text">บันทึกข้อมูลเรียบร้อยแล้ว</span>
+    </div>
+
+    <script src="transactions.js"></script>
+</body>
+</html>
