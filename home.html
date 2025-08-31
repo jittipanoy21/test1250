@@ -477,6 +477,11 @@
             .summary-item {
                 width: 100%;
             }
+            
+            /* ป้องกันการซูมเมื่อคลิกที่ input บน iOS */
+            input, select, textarea {
+                font-size: 16px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -672,6 +677,8 @@
     <div class="notification" id="notification">
         <span id="notification-text">บันทึกข้อมูลเรียบร้อยแล้ว</span>
     </div>
+    
+    <button type="submit" class="prevent-mobile-submit" style="display: none;"></button>
 
     <script>
         // ข้อมูลตัวอย่าง
@@ -893,104 +900,101 @@
             // ฟอร์มรายรับ
             document.getElementById('income-form').addEventListener('submit', function(e) {
                 e.preventDefault();
-                
-                const category = document.getElementById('income-category').value;
-                const amount = parseFloat(document.getElementById('income-amount').value);
-                const note = document.getElementById('income-note').value || 'ไม่มีหมายเหตุ';
-                const image = document.getElementById('income-image').value;
-                
-                if (!amount || amount <= 0) {
-                    showNotification('กรุณากรอกจำนวนเงินที่ถูกต้อง');
-                    return;
-                }
-                
-                if (editingId) {
-                    // โหมดแก้ไข
-                    const index = transactions.findIndex(t => t.id === editingId);
-                    if (index !== -1) {
-                        transactions[index] = {
-                            ...transactions[index],
-                            category,
-                            amount,
-                            note,
-                            image
-                        };
-                        showNotification('อัปเดตรายรับเรียบร้อยแล้ว');
-                    }
-                    editingId = null;
-                } else {
-                    // เพิ่มรายการใหม่
-                    transactions.push({
-                        id: Date.now(), // ใช้ timestamp เป็น ID
-                        type: 'income',
-                        category,
-                        amount,
-                        note,
-                        image,
-                        date: new Date().toISOString().split('T')[0]
-                    });
-                    showNotification('บันทึกรายรับเรียบร้อยแล้ว');
-                }
-                
-                // รีเซ็ตฟอร์ม
-                this.reset();
-                document.getElementById('income-preview').style.display = 'none';
-                
-                // อัปเดต UI
-                updateChart();
-                renderTransactions();
+                handleFormSubmit('income');
             });
             
             // ฟอร์มรายจ่าย
             document.getElementById('expense-form').addEventListener('submit', function(e) {
                 e.preventDefault();
-                
-                const category = document.getElementById('expense-category').value;
-                const amount = parseFloat(document.getElementById('expense-amount').value);
-                const note = document.getElementById('expense-note').value || 'ไม่มีหมายเหตุ';
-                const image = document.getElementById('expense-image').value;
-                
-                if (!amount || amount <= 0) {
-                    showNotification('กรุณากรอกจำนวนเงินที่ถูกต้อง');
-                    return;
-                }
-                
-                if (editingId) {
-                    // โหมดแก้ไข
-                    const index = transactions.findIndex(t => t.id === editingId);
-                    if (index !== -1) {
-                        transactions[index] = {
-                            ...transactions[index],
-                            category,
-                            amount,
-                            note,
-                            image
-                        };
-                        showNotification('อัปเดตรายจ่ายเรียบร้อยแล้ว');
+                handleFormSubmit('expense');
+            });
+            
+            // ป้องกันการส่งฟอร์มโดยกด Enter บนมือถือ
+            const formInputs = document.querySelectorAll('input, textarea, select');
+            formInputs.forEach(input => {
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        // บนมือถือให้ป้องกันการส่งฟอร์ม
+                        if (window.innerWidth <= 768) {
+                            e.preventDefault();
+                            
+                            // หา input ต่อไปในฟอร์ม
+                            const form = this.closest('form');
+                            const inputs = Array.from(form.querySelectorAll('input, textarea, select'));
+                            const currentIndex = inputs.indexOf(this);
+                            
+                            if (currentIndex < inputs.length - 1) {
+                                // โฟกัสไปที่ input ต่อไป
+                                inputs[currentIndex + 1].focus();
+                            } else {
+                                // ถ้าเป็น input สุดท้าย ให้ซ่อนคีย์บอร์ด
+                                this.blur();
+                            }
+                        }
                     }
-                    editingId = null;
-                } else {
-                    // เพิ่มรายการใหม่
-                    transactions.push({
-                        id: Date.now(), // ใช้ timestamp เป็น ID
-                        type: 'expense',
+                });
+            });
+        }
+        
+        // ฟังก์ชันจัดการการส่งฟอร์ม
+        function handleFormSubmit(type) {
+            const category = document.getElementById(`${type}-category`).value;
+            const amount = parseFloat(document.getElementById(`${type}-amount`).value);
+            const note = document.getElementById(`${type}-note`).value || 'ไม่มีหมายเหตุ';
+            const image = document.getElementById(`${type}-image`).value;
+            
+            if (!amount || amount <= 0) {
+                showNotification('กรุณากรอกจำนวนเงินที่ถูกต้อง');
+                return;
+            }
+            
+            if (editingId) {
+                // โหมดแก้ไข
+                const index = transactions.findIndex(t => t.id === editingId);
+                if (index !== -1) {
+                    transactions[index] = {
+                        ...transactions[index],
                         category,
                         amount,
                         note,
-                        image,
-                        date: new Date().toISOString().split('T')[0]
-                    });
-                    showNotification('บันทึกรายจ่ายเรียบร้อยแล้ว');
+                        image
+                    };
+                    showNotification('อัปเดต' + (type === 'income' ? 'รายรับ' : 'รายจ่าย') + 'เรียบร้อยแล้ว');
                 }
+                editingId = null;
                 
-                // รีเซ็ตฟอร์ม
-                this.reset();
-                document.getElementById('expense-preview').style.display = 'none';
-                
-                // อัปเดต UI
-                updateChart();
-                renderTransactions();
-            });
+                // เปลี่ยนปุ่มกลับไปเป็นบันทึก
+                const submitButton = document.getElementById(`${type}-form`).querySelector('button[type="submit"]');
+                submitButton.textContent = type === 'income' ? 'บันทึกรายรับ' : 'บันทึกรายจ่าย';
+            } else {
+                // เพิ่มรายการใหม่
+                transactions.push({
+                    id: Date.now(), // ใช้ timestamp เป็น ID
+                    type: type,
+                    category,
+                    amount,
+                    note,
+                    image,
+                    date: new Date().toISOString().split('T')[0]
+                });
+                showNotification('บันทึก' + (type === 'income' ? 'รายรับ' : 'รายจ่าย') + 'เรียบร้อยแล้ว');
+            }
+            
+            // รีเซ็ตฟอร์ม
+            document.getElementById(`${type}-form`).reset();
+            document.getElementById(`${type}-preview`).style.display = 'none';
+            
+            // อัปเดต UI
+            updateChart();
+            renderTransactions();
+            
+            // บนมือถือ: หลังจากบันทึกแล้วให้แสดงรายการล่าสุด
+            if (window.innerWidth <= 768) {
+                const transactionsBtn = document.querySelector('.mobile-menu-btn[data-section="transactions"]');
+                if (transactionsBtn) {
+                    transactionsBtn.click();
+                }
+            }
         }
 
         // ฟังก์ชันสำหรับเมนูมือถือ
